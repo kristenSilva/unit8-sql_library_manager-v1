@@ -19,7 +19,9 @@ function asyncHandler(cb){
 
 /* GET book collection. */
 router.get('/', asyncHandler(async (req, res, next) => {
-  const books = await Book.findAll();
+  const books = await Book.findAll({
+    limit: 5
+  });
   res.render("books/index", {books, title: "Books"});
 }));
 
@@ -45,6 +47,40 @@ router.post('/new', asyncHandler(async (req, res) => {
     }
   }
 }));
+
+/* Search for book */
+router.get('/search', asyncHandler(async (req, res, next) => {
+  console.log(req.query.search);
+  const books = await Book.findAll({
+    where: {
+        [Op.or]: [
+          {
+            title: {
+              [Op.substring]: req.query.search
+            }
+          }, 
+          {
+            author: {
+              [Op.substring]: req.query.search
+            }
+          },
+          {
+            genre: {
+              [Op.substring]: req.query.search
+            }
+          },
+          {
+            year: {
+              [Op.substring]: req.query.search
+            }
+          }
+        ]
+    }
+  });
+  console.log(books);
+  res.render("books/index", {books, title: "Books"});
+}));
+
 
 /* GET individual book. */
 router.get("/:id", asyncHandler(async (req, res, next) => {
@@ -101,5 +137,6 @@ router.post('/:id/delete', asyncHandler(async (req, res) => {
     next(err);     
   }
 }));
+
 
 module.exports = router;
