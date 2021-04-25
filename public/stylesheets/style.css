@@ -1,6 +1,15 @@
 body {
   padding: 10px 50px 50px;
   font: 18px "Garamond", serif;
+  background-image: url("../images/stack-of-books.jpeg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+table {
+  background-color: white;
 }
 
 a {
@@ -25,7 +34,7 @@ a.button, input[type=submit] {
 }
 
 form a.button, input[type=submit] {
-  margin-left: 140px;
+  margin-left: 10px;
   transition: 0.4s;
 }
 
@@ -56,7 +65,7 @@ h2 {
 th {
   border-bottom: 2px solid #D8B493;
   text-align: left;
-  padding: 5px 20px 5px 10px;
+  padding: 15px 20px 15px 10px;
 }
 
 tr {
@@ -94,4 +103,19 @@ input[type=text] {
 
 .error {
   color: rgb(236, 15, 15);
+}
+
+.center {
+  margin: auto;
+  width: 90%;
+}
+
+.pagination {
+  margin: 30px 0 60px;
+  text-align: center;
+}
+
+.pagination li {
+  display: inline;
+  padding: 0 3px;
 }

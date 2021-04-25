@@ -1,13 +1,14 @@
 extends ../layout
 
 block content
-  h1 Books
+  h1 Book Collection
   form(action=`/books/search`, method="get")
     input(name = "search", type="text", placeholder="Title, author, etc..")
     input(type="submit", value="Search")
   p
     a(class="button", href="/books/new") Create New Book
-  table 
+
+  table(class="center") 
     thead 
       tr 
         th Title 
@@ -24,6 +25,8 @@ block content
           td=book.year
   br
   -var i = 1;
-    div
-      while i < pages + 1
-        a(class="button", href=`/books/pages/${i}`, style="margin-right: 3px;") #{i++}
+    div(class="pagination")
+      ul
+        while i < pages + 1
+          li
+            a(class="button", href=`/books/pages/${i}`, style="margin-right: 3px;") #{i++}
