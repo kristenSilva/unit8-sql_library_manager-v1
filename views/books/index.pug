@@ -22,3 +22,8 @@ block content
           td=book.author 
           td=book.genre 
           td=book.year
+  br
+  -var i = 1;
+    div
+      while i < pages + 1
+        a(class="button", href=`/books/pages/${i}`, style="margin-right: 3px;") #{i++}

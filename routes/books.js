@@ -19,10 +19,22 @@ function asyncHandler(cb){
 
 /* GET book collection. */
 router.get('/', asyncHandler(async (req, res, next) => {
-  const books = await Book.findAll({
-    limit: 5
+  res.redirect('books/pages/1');
+}));
+
+/* Pagination */
+router.get('/pages/:page', asyncHandler(async (req, res) => {
+  const data = await Book.findAll();
+  const pages = Math.ceil(data.length/5);
+  console.log(pages);
+  const bookPages = await Book.findAndCountAll({
+    limit: 5,
+    offset: (req.params.page -1)* 5
   });
-  res.render("books/index", {books, title: "Books"});
+  const books = bookPages.rows.map(book => book.dataValues);
+  //console.log(books.rows[0].dataValues);
+  console.log(books);
+  res.render("books/index", {books, pages});
 }));
 
 /* Create a new book form. */
@@ -77,7 +89,6 @@ router.get('/search', asyncHandler(async (req, res, next) => {
         ]
     }
   });
-  console.log(books);
   res.render("books/index", {books, title: "Books"});
 }));
 
