@@ -23,18 +23,24 @@ router.get('/', asyncHandler(async (req, res, next) => {
 }));
 
 /* Pagination */
-router.get('/pages/:page', asyncHandler(async (req, res) => {
+router.get('/pages/:page', asyncHandler(async (req, res, next) => {
   const data = await Book.findAll();
   const pages = Math.ceil(data.length/5);
-  console.log(pages);
   const bookPages = await Book.findAndCountAll({
     limit: 5,
     offset: (req.params.page -1)* 5
   });
   const books = bookPages.rows.map(book => book.dataValues);
-  //console.log(books.rows[0].dataValues);
-  console.log(books);
-  res.render("books/index", {books, pages});
+  //catch incorrect page request
+  console.log(typeof req.params.page);
+  if(req.params.page <= pages || Number.isNaN(req.params.page)){
+    res.render("books/index", {books, pages});
+  } else {
+    const err = new Error();
+    err.status = 404;
+    err.message = "Looks like the page you requested doesn't exist."
+    next(err);
+  }
 }));
 
 /* Create a new book form. */
@@ -62,7 +68,6 @@ router.post('/new', asyncHandler(async (req, res) => {
 
 /* Search for book */
 router.get('/search', asyncHandler(async (req, res, next) => {
-  console.log(req.query.search);
   const books = await Book.findAll({
     where: {
         [Op.or]: [
@@ -89,7 +94,16 @@ router.get('/search', asyncHandler(async (req, res, next) => {
         ]
     }
   });
-  res.render("books/index", {books, title: "Books"});
+  //catch incorrect search request
+  console.log(books);
+  if(books.length > 0){
+    res.render("books/index", {books, title: "Books"});
+  } else {
+    const err = new Error();
+    err.status = 404;
+    err.message = "Looks like the book you requested doesn't exist in our library."
+    next(err);
+  }
 }));
 
 
@@ -112,7 +126,6 @@ router.post('/:id', asyncHandler(async (req, res) => {
   let book;
   try{
     book = await Book.findByPk(req.params.id);
-    //cat incorrect book.id request
     if(book){
       await book.update(req.body);
       res.redirect(`/books`);
