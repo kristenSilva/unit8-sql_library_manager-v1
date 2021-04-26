@@ -32,7 +32,6 @@ router.get('/pages/:page', asyncHandler(async (req, res, next) => {
   });
   const books = bookPages.rows.map(book => book.dataValues);
   //catch incorrect page request
-  console.log(typeof req.params.page);
   if(req.params.page <= pages || Number.isNaN(req.params.page)){
     res.render("books/index", {books, pages});
   } else {
@@ -95,7 +94,6 @@ router.get('/search', asyncHandler(async (req, res, next) => {
     }
   });
   //catch incorrect search request
-  console.log(books);
   if(books.length > 0){
     res.render("books/index", {books, title: "Books"});
   } else {
